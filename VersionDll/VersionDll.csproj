@@ -9,9 +9,10 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
     <OutputType>Library</OutputType>
-    <PublishAot>true</PublishAot>
     <NativeLib>Shared</NativeLib>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <Win32Resource>version.res</Win32Resource>
+    <AssemblyName>version</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,9 +22,12 @@
   <ItemGroup>
     <PackageReference Include="Cetours" Version="1.0.6" />
   </ItemGroup>
+
   <PropertyGroup>
-    <Win32Resource>version.res</Win32Resource>
-    <AssemblyName>version</AssemblyName>
+    <BuildingInsidePublish Condition="'$(DotNetPublish)' == 'true'">true</BuildingInsidePublish>
   </PropertyGroup>
 
+  <Target Name="CustomBuild" BeforeTargets="Build" Condition="'$(BuildingInsidePublish)' != 'true'">
+    <Exec Command="dotnet publish -r win-x64 -c $(Configuration) -p:DotNetPublish=true"/>
+  </Target>
 </Project>
